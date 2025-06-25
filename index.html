@@ -22,7 +22,9 @@
     async function enviarPergunta() {
       const pergunta = document.getElementById("pergunta").value;
       const respostaDiv = document.getElementById("resposta");
-      respostaDiv.innerHTML = "A pensar...";
+      respostaDiv.textContent = "A pensar...";
+
+      console.log("➡️ Pergunta enviada:", pergunta);
 
       try {
         const res = await fetch("/.netlify/functions/chat", {
@@ -31,10 +33,21 @@
           body: JSON.stringify({ prompt: pergunta })
         });
 
-        const data = await res.json();
-        respostaDiv.innerHTML = data.resposta || "Sem resposta.";
+        console.log("📡 Status da resposta:", res.status, res.statusText);
+
+        // Tentamos ler o corpo sempre, mesmo em erro, para ver detalhes
+        const data = await res.json().catch(() => ({ erro: "Resposta não‑JSON" }));
+        console.log("📄 Corpo bruto da resposta:", data);
+
+        if (!res.ok) {
+          respostaDiv.textContent = `Erro ${res.status}: ${data.message || 'não especificado'}`;
+          return;
+        }
+
+        respostaDiv.textContent = data.resposta || "Sem resposta.";
       } catch (err) {
-        respostaDiv.innerHTML = "Erro ao contactar o servidor.";
+        console.error("❌ Erro fetch:", err);
+        respostaDiv.textContent = "Erro ao contactar o servidor.";
       }
     }
   </script>
