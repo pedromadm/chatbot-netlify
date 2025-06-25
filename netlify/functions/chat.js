@@ -34,9 +34,10 @@ exports.handler = async (event) => {
       body: JSON.stringify({ resposta: texto })
     };
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: "Erro ao contactar a API." })
-    };
-  }
+  console.error(error);                // aparece no log do Netlify
+  return {
+    statusCode: 500,
+    body: JSON.stringify({ erro: error.message }) // envia o motivo real pro browser
+  };
+}
 };
