@@ -1,0 +1,11 @@
+{
+  "name": "chatbot-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"no build step\""
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.9"
+  }
+}
